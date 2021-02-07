@@ -12,6 +12,7 @@ all: tests
 INSTALLBASE=/usr/local
 
 libetiketter.a: split.o
+libetiketter.a: key.o
 	$(AR) -r $@ $^
 
 etiketter: etiketter.o libetiketter.a
@@ -27,6 +28,7 @@ checkv: tests
 	valgrind -q ./tests -v
 
 libtest.a: test/split.o
+libtest.a: test/key.o
 	$(AR) -r $@ $^
 
 test/%.o: CPPFLAGS+=-I.

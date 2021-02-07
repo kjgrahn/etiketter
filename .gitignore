@@ -1,0 +1,12 @@
+tests.cc
+*.o
+lib*.a
+tests
+etiketter
+dep/
+
+.xvpics/
+*.ps
+*.pdf
+*.xlsx
+*.jpg

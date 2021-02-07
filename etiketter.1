@@ -1,0 +1,73 @@
+.ss 12 0
+.de BP
+.IP \\fB\\$*
+..
+.
+.TH etiketter 1 "FEB 2021 " Etiketter "User Manuals"
+.SH "NAME"
+etiketter \- typeset labels for herbarium specimens
+.
+.SH "SYNOPSIS"
+.B etiketter
+.I file
+\&...
+.br
+.B etiketter --version
+.br
+.B etiketter --help
+.
+.SH "DESCRIPTION"
+.B etiketter
+lets you print labels for herbarium specimens, based on information extracted
+from
+.BR Artportalen .
+It also lets you edit the information first.
+The result could be something like:
+.IP
+.ft CW
+.nf
+FLORA SUECICA
+
+Asplenium septentrionale (L.) Hoffm.\|         72765291
+gaffelbräken
+
+Västergötland, Mölndal
+brant i vägkant NO om f d Blixås crossbana, Mölndal
+6395290 1273650 (±10m) RT90 2.5 gon
+
+2 ex kvar i en något högre klippa som inte täcktes
+av lermassorna.
+
+2021-02-06                               Jörgen Grahn
+.
+.PP
+foo
+.
+.SH "OPTIONS"
+.
+.BP --foo
+bar
+.
+.BP --version
+Print version information and exit.
+.BP --help
+Print a brief help text and exit.
+.
+.SH "NOTES"
+It would have been nice with
+.BR "crop marks" .
+.
+.SH "AUTHOR"
+J\(:orgen Grahn
+.IR \[fo]grahn+src@snipabacken.se\[fc] .
+.
+.SH "LICENSE"
+The GNU General Public License (GPL) version 2 or (at your option) version 3.
+.
+.SH "SEE ALSO"
+.BR groblad (5),
+.BR groff (1),
+.BR xlsx2csv (1).
+.PP
+.B Artportalen
+.IR \[fo]https://www.artportalen.se/\[fc] .

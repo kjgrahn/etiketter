@@ -1,6 +1,8 @@
+.hw sepa-ra-ted
+.hw Art-por-ta-len
 .ss 12 0
 .de BP
-.IP \\fB\\$*
+.IP "\fB\\$1\fP"
 ..
 .
 .TH etiketter 1 "FEB 2021 " Etiketter "User Manuals"
@@ -9,14 +11,22 @@ etiketter \- typeset labels for herbarium specimens
 .
 .SH "SYNOPSIS"
 .B etiketter
-.I file
-\&...
+.RB [ \-o
+.IR file ]
+.I file.xlsx
+.br
+.B etiketter
+.RB [ \-o
+.IR file ]
+<
+.I csv
 .br
 .B etiketter --version
 .br
 .B etiketter --help
 .
 .SH "DESCRIPTION"
+.
 .B etiketter
 lets you print labels for herbarium specimens, based on information extracted
 from
@@ -40,22 +50,174 @@ av lermassorna.
 
 2021-02-06                               Jörgen Grahn
 .
+.SS "Fields"
+.
+The
+.B Artportalen
+fields that form the label are:
 .PP
-foo
+.ft CW
+.nf
+Vetenskapligt namn   Provins          Id
+Auktor               Församling       Kommentar
+Artnamn              Lokalnamn        Startdatum
+                     Nordkoordinat    Observatörer
+                     Ostkoordinat
+                     Noggrannhet
+.fi
+.BP "Provins"
+The floristic province (hopefully).
+.BP "Församling"
+Unclear what this is.  The user interface has both
+.I församling
+and
+.IR socken ,
+but only one is exported, and then the field names have been swapped.
+Also, it's unclear which definitions are used: you cannot generally assume it's the
+ones used in botanical literature.
+.BP "Nordkoordinat, Ostkoordinat"
+These are in SWEREF99, RT90 or WGS\~84, depending on user settings.
+.BP "Id"
+The numerical record ID for this observation. It's the one used to form URLs, e.g.
+.IR \[fo]https://www.artportalen.se/Sighting/72765291\[fc] .
+.BP "Startdatum"
+Observation can cover many days, but only the first date is printed.
+.BP "Observatörer"
+Assumed to be a single observer (you).
+.
+.SS "Data formats"
+.
+.BR Artportalen 's
+feature for data export generates
+.B "Excel 2007+"
+documents, known by the filename extension
+.BR .xlsx .
+.B etiketter
+can read such a document directly, if Dilshod Temirkhodjaev's
+.BR xlsx2csv (1)
+is installed.  If it's not, it can read
+.B CSV
+data, but this needs to be CSV data on the form where all cells are quoted and
+separated by comma, e.g. \fI"foo","bar","baz"\fP ...
+.
+.PP
+The output from
+.B etiketter
+is
+.B groff
+(or
+.BR roff ,
+or
+.BR troff )
+source code (or typesetting markup).
+That is, a text file mixing text to be printed, with formatting commands.
+When typeset by
+.BR groff (1)
+to
+.B PDF
+or
+.BR Postscript ,
+it's a series of smallish landscape mode pages, with one label per page.
+Hopefully a printer can be told to print four or eight of these per A4 paper,
+so you don't waste paper.
+.
+.PP
+You may, of course, edit the data in Artportalen, in Excel, in the csv file,
+or in the output from
+.BR etiketter .
+Your Excel export is likely to include
+entries for which you don't have a herbarium specimen; you probably want to edit
+the Excel sheet itself to eliminate these. Or perhaps you cut and paste lines to
+a new sheet.
 .
 .SH "OPTIONS"
 .
-.BP --foo
-bar
+.BP "\-o \fIfile"
+Print the result (the troff text) to
+.I file
+instead of standard output.
 .
 .BP --version
 Print version information and exit.
 .BP --help
 Print a brief help text and exit.
 .
+.SH "EXAMPLES"
+.
+.IP "% etiketter -o 2021.groff 2021.xlsx"
+From Excel directly to groff input.
+Assumes you have
+.B xlsx2csv (1)
+installed.
+.IP "% etiketter 2021.xlsx | groff -Tpdf -P -pA6 -P -l > 2021.pdf"
+Similarly, but all the way to PDF, with A6 pages in landscape mode.
+.IP "% xlsx2csv -q all 2021.xlsx | etiketter -o 2021.groff"
+From csv (provided by
+.BR xlsx2csv (1)
+in the example) to groff input.
+.IP "% xlsx2csv -q all 2021.xlsx | grep -e{Provins,Hieracium} | etiketter -o 2021.groff"
+Having an explicit csv phase allows simple filtering.
+This one generates labels only for
+.IR Hieracium .
+You need to grep for something matching the key row in the sheet too;
+I selected
+.I Provins
+since it's an uncommon word.
+.
+.SH "BUGS"
+.
+.IP \- 3x
+.B Artportalen
+capitalizes common names;
+.B etiketter
+should fix (undo) this, except for the handful of species names which
+.I do
+include a capital letter.
+.
+.IP \-
+Character sets.  I haven't tried any of this in an
+.BR utf8 (7)
+locale, only in
+.BR latin1 (7).
+.
+.IP \-
+.BR xlsx2csv 's
+error handling is a bit spotty. For example, if you hand it a file that doesn't
+exist, it doesn't report this but calls it an invalid file, and goes on to
+crash on an error handling bug.
+It's still the most widely available tool I could find, after
+.B xls2txt
+got abandoned. It's been in Debian since 2013.
+.
 .SH "NOTES"
+.
+.IP \- 3x
 It would have been nice with
-.BR "crop marks" .
+.IR "crop marks" ,
+but perhaps printers (or printer drivers) can be told add those,
+when told to put multiple pages on each paper.
+.
+.IP \-
+.B Artportalen
+will create Excel exports in Swedish or English, depending on the user's language settings.
+This affects the column titles.
+.B etiketter
+only knows about the swedish names, so it cannot process the other kind.
+The other kind currently
+.\" Feb 2021
+has multiple columns with the same name but different meanings
+.RI ( County ),
+so it's useless anyway.
+.
+.IP \-
+It's up to you to ensure that the ink doesn't fade after thirty years or whatever.
+If you cannot, perhaps you should write your labels with a lead pencil.
+.
+.IP \-
+There's a circular dependency in the workflow, since when you have a labeled herbarium
+specimen, you suddenly have the option to record this information in the Artportalen
+entry from which you generated the label.
+I have no strategy for this.
 .
 .SH "AUTHOR"
 J\(:orgen Grahn
@@ -71,3 +233,6 @@ The GNU General Public License (GPL) version 2 or (at your option) version 3.
 .PP
 .B Artportalen
 .IR \[fo]https://www.artportalen.se/\[fc] .
+.br
+.B xlsx2csv
+.IR \[fo]https://github.com/dilshod/xlsx2csv\[fc] .

@@ -36,7 +36,7 @@ namespace {
 
     void preamble(std::ostream& os)
     {
-	os << "\\\" -*- nroff -*-" << nl
+	os << R"(.\" -*- nroff -*-)" << nl
 	   << ".ig" << nl
 	   << "This is troff/groff markup, generated from data" << nl
 	   << "presumably from Artportalen, by etiketter " << version() << "." << nl

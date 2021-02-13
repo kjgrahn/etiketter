@@ -20,6 +20,8 @@
  */
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <cstring>
 
 #include <getopt.h>
 
@@ -145,12 +147,12 @@ int main(int argc, char ** argv)
 {
     const std::string prog = argv[0] ? argv[0] : "etiketter";
     const std::string usage = std::string("usage: ")
-	+ prog + " file ...\n"
+	+ prog + " [-o file] [file]\n"
 	"       "
 	+ prog + " --help\n"
 	"       "
 	+ prog + " --version";
-    const char optstring[] = "";
+    const char optstring[] = "o:";
     const struct option long_options[] = {
 	{"help", 0, 0, 'H'},
 	{"version", 0, 0, 'V'},
@@ -160,11 +162,16 @@ int main(int argc, char ** argv)
     std::cin.sync_with_stdio(false);
     std::cout.sync_with_stdio(false);
 
+    std::string outfile;
+
     int ch;
     while ((ch = getopt_long(argc, argv,
 			     optstring,
 			     &long_options[0], 0)) != -1) {
 	switch(ch) {
+	case 'o':
+	    outfile = optarg;
+	    break;
 	case 'H':
 	    std::cout << usage << '\n';
 	    return 0;
@@ -189,5 +196,16 @@ int main(int argc, char ** argv)
 	// XXX handle not reading from stdin
     }
 
-    return etiketter(std::cout, std::cin);
+    if (outfile.empty()) {
+	return etiketter(std::cout, std::cin);
+    }
+
+    std::ofstream of {outfile};
+    if (!of) {
+	std::cerr << "error: cannot open " << outfile << " for writing: "
+		  << std::strerror(errno) << '\n';
+	return 1;
+    }
+
+    return etiketter(of, std::cin);
 }

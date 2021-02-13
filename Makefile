@@ -14,6 +14,7 @@ INSTALLBASE=/usr/local
 libetiketter.a: split.o
 libetiketter.a: key.o
 libetiketter.a: thousands.o
+libetiketter.a: coordinate.o
 	$(AR) -r $@ $^
 
 etiketter: etiketter.o libetiketter.a

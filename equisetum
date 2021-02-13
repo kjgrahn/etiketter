@@ -1,11 +1,15 @@
 .\" -*- nroff -*-
 .
+.de TITLE
+.sp
+.ps 20
+F\s-4LORA\s0 S\s-4UECICA\s0
+..
 .
 .ll 10c
 .pl 7c
 .
-.ps 20
-Flora Suecica
+.TITLE
 .ps 14
 .sp 2
 .

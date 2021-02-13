@@ -43,6 +43,12 @@ namespace {
 	   << "See the groff(7) man page if you need to understand" << nl
 	   << "the markup." << nl
 	   << ".." << nl
+	   << ".de TITLE" << nl
+	   << ".sp" << nl
+	   << ".ps 20" << nl
+	   << R"(F\s-4LORA\s0 S\s-4UECICA\s0)" << nl
+	   << ".." << nl
+	   << "." << nl
 	   << ".ll 10c" << nl
 	   << ".pl 7c" << nl
 	   << "." << nl;
@@ -66,8 +72,7 @@ namespace {
 
     bool etikett(std::ostream& os, const Record& e)
     {
-	os << ".ps 20" << nl
-	   << text("Flora Suecica")
+	os << ".TITLE" << nl
 	   << ".ps 14" << nl
 	   << ".sp 2" << nl
 	   << "." << nl

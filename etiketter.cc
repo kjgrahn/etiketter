@@ -54,16 +54,18 @@ namespace {
 	   << "." << nl;
     }
 
-    struct text {
-	text (const std::string& val, const std::string& b = "")
+    template <class T>
+    struct Text {
+	Text (const T& val, const std::string& b = "")
 	    : val(val),
 	      b(b)
 	{}
-	const std::string& val;
+	const T& val;
 	const std::string& b;
     };
 
-    std::ostream& operator<< (std::ostream& os, const text& val)
+    template <class T>
+    std::ostream& operator<< (std::ostream& os, const Text<T>& val)
     {
 	return os << val.val << val.b << nl;
     }
@@ -72,6 +74,8 @@ namespace {
 
     bool etikett(std::ostream& os, const Record& e)
     {
+	using text = Text<std::string>;
+
 	os << ".TITLE" << nl
 	   << ".ps 14" << nl
 	   << ".sp 2" << nl

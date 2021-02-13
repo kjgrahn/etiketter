@@ -72,8 +72,6 @@ namespace {
 	return os << val.val << val.b << nl;
     }
 
-    const char* coord(Record::spair, std::string) { return "XXX\n"; }
-
     bool etikett(std::ostream& os, const Record& e)
     {
 	using text = Text<std::string>;

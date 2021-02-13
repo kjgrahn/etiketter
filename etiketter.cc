@@ -21,6 +21,8 @@
 #include <string>
 #include <iostream>
 
+#include <getopt.h>
+
 #include "key.h"
 
 namespace {
@@ -104,28 +106,79 @@ namespace {
 
 	return true;
     }
+
+    int etiketter(std::ostream& os, std::istream& is)
+    {
+	Key key;
+
+	std::string s;
+	while (std::getline(is, s)) {
+	    if (key.feed(s)) break;
+	}
+
+	if (!key.valid()) {
+	    std::cerr << "error: found no key/heading row in the data\n";
+	    return 1;
+	}
+
+	preamble(os);
+
+	while (std::getline(is, s)) {
+	    const Record record {key, s};
+	    if (!etikett(os, record)) return 1;
+	}
+
+	return 0;
+    }
 }
 
-int main()
+int main(int argc, char ** argv)
 {
-    Key key;
+    const std::string prog = argv[0] ? argv[0] : "etiketter";
+    const std::string usage = std::string("usage: ")
+	+ prog + " file ...\n"
+	"       "
+	+ prog + " --help\n"
+	"       "
+	+ prog + " --version";
+    const char optstring[] = "";
+    const struct option long_options[] = {
+	{"help", 0, 0, 'H'},
+	{"version", 0, 0, 'V'},
+	{0, 0, 0, 0}
+    };
 
-    std::string s;
-    while (std::getline(std::cin, s)) {
-	if (key.feed(s)) break;
+    std::cin.sync_with_stdio(false);
+    std::cout.sync_with_stdio(false);
+
+    int ch;
+    while ((ch = getopt_long(argc, argv,
+			     optstring,
+			     &long_options[0], 0)) != -1) {
+	switch(ch) {
+	case 'H':
+	    std::cout << usage << '\n';
+	    return 0;
+	    break;
+	case 'V':
+	    std::cout << "etiketter " << version() << '\n'
+		      << "Copyright (c) 2021 Jörgen Grahn.\n"
+		      << "All rights reserved.\n";
+	    return 0;
+	    break;
+	case ':':
+	case '?':
+	default:
+	    std::cerr << usage << '\n';
+	    return 1;
+	    break;
+	}
     }
 
-    if (!key.valid()) {
-	std::cerr << "error: found no key/heading row in the data\n";
-	return 1;
+    const std::vector<std::string> files(argv+optind, argv+argc);
+    if (files.size()) {
+	// XXX handle not reading from stdin
     }
 
-    preamble(std::cout);
-
-    while (std::getline(std::cin, s)) {
-	const Record record {key, s};
-	if (!etikett(std::cout, record)) return 1;
-    }
-
-    return 0;
+    return etiketter(std::cout, std::cin);
 }

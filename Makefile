@@ -13,6 +13,7 @@ INSTALLBASE=/usr/local
 
 libetiketter.a: split.o
 libetiketter.a: key.o
+libetiketter.a: thousands.o
 	$(AR) -r $@ $^
 
 etiketter: etiketter.o libetiketter.a
@@ -29,6 +30,7 @@ checkv: tests
 
 libtest.a: test/split.o
 libtest.a: test/key.o
+libtest.a: test/thousands.o
 	$(AR) -r $@ $^
 
 test/%.o: CPPFLAGS+=-I.

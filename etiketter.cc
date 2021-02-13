@@ -24,6 +24,8 @@
 #include <getopt.h>
 
 #include "key.h"
+#include "thousands.h"
+#include "coordinate.h"
 
 namespace {
 
@@ -90,7 +92,7 @@ namespace {
 	   << ".ps 10" << nl
 	   << ".rj 1" << nl
 	   << ".rt" << nl
-	   << text(e.id())
+	   << Text<Thousands>(e.id())
 	   << ".br" << nl
 	   << text(e.name())
 	   << ".sp" << nl
@@ -100,7 +102,7 @@ namespace {
 	   << ".br" << nl
 	   << text(e.place())
 	   << ".sp 6p" << nl
-	   << coord(e.coordinate(), e.radius())
+	   << Coordinate(e.coordinate(), e.radius()) << nl
 	   << ".sp" << nl
 	   << text(e.comment())
 	   << ".sp" << nl

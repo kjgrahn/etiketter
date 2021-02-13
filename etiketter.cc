@@ -114,9 +114,6 @@ namespace {
 	   << ".rt" << nl
 	   << text("Leg \\fI" + e.leg() + "\\fP");
 
-	os << "." << nl
-	   << ".bp" << nl;
-
 	return true;
     }
 
@@ -135,8 +132,15 @@ namespace {
 	}
 
 	preamble(os);
+	unsigned n = 0;
 
 	while (std::getline(is, s)) {
+
+	    if (n++) {
+		os << "." << nl
+		   << ".bp" << nl;
+	    }
+
 	    const Record record {key, s};
 	    if (!etikett(os, record)) return 1;
 	}

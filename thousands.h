@@ -17,6 +17,7 @@ class Thousands {
 public:
     Thousands(const std::string& s,
 	      const std::string& sep = "\\|");
+    bool empty() const { return s.empty(); }
     std::ostream& put(std::ostream& os) const;
 
 private:

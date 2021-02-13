@@ -73,6 +73,7 @@ namespace {
     template <class T>
     std::ostream& operator<< (std::ostream& os, const Text<T>& val)
     {
+	if (val.val.empty()) return os;
 	return os << val.val << val.b << nl;
     }
 

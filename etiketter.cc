@@ -22,12 +22,14 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <memory>
 
 #include <getopt.h>
 
 #include "key.h"
 #include "thousands.h"
 #include "coordinate.h"
+#include "stdin.h"
 
 namespace {
 
@@ -191,9 +193,23 @@ int main(int argc, char ** argv)
 	}
     }
 
-    const std::vector<std::string> files(argv+optind, argv+argc);
-    if (files.size()) {
-	// XXX handle not reading from stdin
+    const std::vector<char*> files(argv+optind, argv+argc);
+    if (files.size() > 1) {
+	std::cerr << "error: too many arguments\n"
+		  << usage << '\n';
+	return 1;
+    }
+
+    std::unique_ptr<Stdin> stdin;
+
+    if (files.size() == 1) {
+	const std::string xls = files[0];
+
+	stdin.reset(new Stdin({"xlsx2csv",
+			       "--sheetname=Test",
+			       "--quoting=all",
+			       "--ignoreempty",
+			       xls}));
     }
 
     if (outfile.empty()) {

@@ -1,0 +1,65 @@
+Quoting part of the man page, as it appeared in February, 2021:
+
+NAME
+       etiketter - typeset labels for herbarium specimens
+
+SYNOPSIS
+
+       etiketter [-o file] file.xlsx
+       etiketter [-o file] < csv
+       etiketter --version
+       etiketter --help
+
+DESCRIPTION
+
+       etiketter  lets  you  print labels for herbarium specimens,
+       based on information extracted from  Artportalen.  It  also
+       lets  you  edit  the information first. The result could be
+       something like:
+
+              FLORA SUECICA
+
+              Asplenium septentrionale (L.) Hoffm.         72765291
+              gaffelbräken
+
+              Västergötland, Mölndal
+              brant i vägkant NO om f d Blixås crossbana, Mölndal
+              6395290 1273650 (±10m) RT90 2.5 gon
+
+              2 ex kvar i en något högre klippa som inte täcktes
+              av lermassorna.
+
+              2021-02-06                               Jörgen Grahn
+
+   Data formats
+       Artportalen's feature for data export generates Excel 2007+
+       documents, known by the filename extension .xlsx. etiketter
+       can  read  such  a document directly, if Dilshod Temirkhod-
+       jaev's xlsx2csv(1) is installed. If it's not, it  can  read
+       CSV  data,  but this needs to be CSV data on the form where
+       all  cells  are  quoted  and  separated  by   comma,   e.g.
+       "foo","bar","baz" ...
+
+       The  output  from  etiketter  is  groff (or roff, or troff)
+       source code (or typesetting markup). That is, a  text  file
+       mixing  text  to be printed, with formatting commands. When
+       typeset by groff(1) to PDF or Postscript, it's a series  of
+       smallish  landscape  mode  pages,  with one label per page.
+       Hopefully a printer can be told to print four or  eight  of
+       these per A4 paper, so you don't waste paper.
+
+       You may, of course, edit the data in Artportalen, in Excel,
+       in the csv file, or in the output from etiketter. Your  Ex-
+       cel export is likely to include entries for which you don't
+       have a herbarium specimen; you probably want  to  edit  the
+       Excel  sheet  itself to eliminate these. Or perhaps you cut
+       and paste lines to a new sheet.
+
+AUTHOR
+
+       Jörgen Grahn <grahn+src@snipabacken.se>.
+
+LICENSE
+
+       The GNU General Public License (GPL) version 2 or (at  your
+       option) version 3.

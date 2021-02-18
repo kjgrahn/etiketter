@@ -19,18 +19,11 @@ bool Key::feed(const std::string& s)
     return valid();
 }
 
-namespace {
-
-    bool has(const std::unordered_map<std::string, unsigned> map,
-	     const char* col)
-    {
-	return map.count(col);
-    }
-}
-
 bool Key::valid() const
 {
-    return has(map, "Startdatum") && has(map, "Vetenskapligt namn");
+    auto has = [&] (const char* s) { return map.count(s); };
+
+    return has("Startdatum") && has("Vetenskapligt namn");
 }
 
 using V = std::vector<std::string>;

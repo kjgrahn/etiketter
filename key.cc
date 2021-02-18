@@ -7,13 +7,24 @@
 
 namespace {
     const char delim[] = "\",\"";
+
+    using V = std::vector<std::string>;
+
+    V csv(const std::string& s)
+    {
+	if (s.size() < 2) return {};
+	auto a = s.data();
+	auto b = a + s.size();
+
+	return split(delim, a+1, b-1);
+    }
 }
 
 bool Key::feed(const std::string& s)
 {
     map.clear();
     unsigned n = 0;
-    for (const auto& name : split(delim, s)) {
+    for (const auto& name : csv(s)) {
 	map[name] = n++;
     }
     return valid();
@@ -25,8 +36,6 @@ bool Key::valid() const
 
     return has("Startdatum") && has("Vetenskapligt namn");
 }
-
-using V = std::vector<std::string>;
 
 const std::string& Key::id(const V& v) const       { return get(v, "Id"); }
 
@@ -73,5 +82,5 @@ const std::string& Key::get(const V& v, const char* name) const
 
 Record::Record(const Key& key, const std::string& s)
     : key {key},
-      v {split(delim, s)}
+      v {csv(s)}
 {}

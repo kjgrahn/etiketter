@@ -118,8 +118,6 @@ to
 or
 .BR Postscript ,
 it's a series of smallish landscape mode pages, with one label per page.
-Hopefully a printer can be told to print four or eight of these per A4 paper,
-so you don't waste paper.
 .
 .PP
 You may, of course, edit the data in Artportalen, in Excel, in the csv file,
@@ -149,8 +147,8 @@ From Excel directly to groff input.
 Assumes you have
 .B xlsx2csv (1)
 installed.
-.IP "% etiketter 2021.xlsx | groff -Tpdf -P -pA6 -P -l > 2021.pdf"
-Similarly, but all the way to PDF, with A6 pages in landscape mode.
+.IP "% etiketter 2021.xlsx | groff -Tpdf -P-pA7 -P-l > 2021.pdf"
+Similarly, but all the way to PDF, with A7 pages in landscape mode.
 .IP "% xlsx2csv -q all 2021.xlsx | etiketter -o 2021.groff"
 From csv (provided by
 .BR xlsx2csv (1)
@@ -164,6 +162,21 @@ I selected
 .I Provins
 since it's an uncommon word.
 .
+.PP
+The generated groff document describes A7 landscape (105 \[tmu] 74 mm) pages,
+but
+.B "groff -Tpfd"
+will by default put these pages in the upper-left corner of standard A4 pages.
+.PP
+I have had success by providing the
+.B "-P-pA7 -P-l"
+options as per above.  This generates a PDF with A7-sized pages, each containing
+a label.  This can then, with suitable software, be printed as eight pages per
+A4 paper, and then you can cut the paper into the eight labels.
+.PP
+You might experience issues with the printer's margins:
+there's a border on the paper where it will put no ink.
+.
 .SH "BUGS"
 .
 .IP \- 3x
@@ -171,6 +184,15 @@ Character sets.  I haven't tried any of this in an
 .BR utf8 (7)
 locale, only in
 .BR latin1 (7).
+.
+.IP \-
+The layout breaks down if there's too much text:
+a long scientific name and/or auctor will clash with the Artportalen serial number,
+and a long comment will clash with the date and collector name at the bottom.
+.IP
+More can be done to avoid this, but I want an airy design by default.
+In the meantime, you can edit down overlong descriptions, remove the auctor and so on.
+For most labels, you don't have to do anything.
 .
 .IP \-
 .BR xlsx2csv 's

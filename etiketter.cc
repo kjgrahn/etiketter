@@ -56,8 +56,18 @@ namespace {
 	   << R"(F\s-4LORA\s0 S\s-4UECICA\s0)" << nl
 	   << ".." << nl
 	   << "." << nl
-	   << ".ll 10c" << nl
-	   << ".pl 7c" << nl
+	   << ".na" << nl
+	   << ".ss 12 0" << nl
+	   << "." << nl;
+    }
+
+    void a7(std::ostream& os)
+    {
+	os << R"(.\" A7 105 × 74 mm)" << nl
+	   << R"(.\" width minus 12 mm margins = 81 mm)" << nl
+	   << ".po 1.2c" << nl
+	   << ".ll 8.1c" << nl
+	   << ".pl 7.4c" << nl
 	   << "." << nl;
     }
 
@@ -88,7 +98,7 @@ namespace {
 
 	os << ".TITLE" << nl
 	   << ".ps 14" << nl
-	   << ".sp 2" << nl
+	   << ".sp 1.6" << nl
 	   << "." << nl
 	   << ".mk" << nl
 	   << ".ft BI" << nl
@@ -103,22 +113,26 @@ namespace {
 	   << Text<Thousands>(e.id())
 	   << ".br" << nl
 	   << text(fix_case(e.name()))
-	   << ".sp" << nl
+	   << "." << nl
+	   << ".sp 0.6" << nl
+	   << ".mk" << nl
+	   << ".sp 4c" << nl
+	   << text(e.date())
+	   << ".br" << nl
+	   << ".rt" << nl
+	   << ".sp 4c" << nl
+	   << ".rj 1" << nl
+	   << text(e.leg(), "\\fP", "Leg \\fI")
+	   << ".rt" << nl
 	   << "." << nl
 	   << text(e.province(), "\\fP,", "\\fB")
 	   << text(e.parish())
 	   << ".br" << nl
 	   << text(e.place())
-	   << ".sp 6p" << nl
+	   << ".br" << nl
 	   << Coordinate(e.coordinate(), e.radius()) << nl
-	   << ".sp" << nl
-	   << text(e.comment())
-	   << ".sp" << nl
-	   << ".mk" << nl
-	   << text(e.date())
-	   << ".rj 1" << nl
-	   << ".rt" << nl
-	   << text(e.leg(), "\\fP", "Leg \\fI");
+	   << ".sp 6p" << nl
+	   << text(e.comment());
 
 	return true;
     }
@@ -138,6 +152,8 @@ namespace {
 	}
 
 	preamble(os);
+	a7(os);
+
 	unsigned n = 0;
 
 	while (std::getline(is, s)) {

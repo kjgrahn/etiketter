@@ -104,7 +104,7 @@ namespace {
 	   << text(e.name())
 	   << ".sp" << nl
 	   << "." << nl
-	   << text(e.province(), ",")
+	   << text(e.province(), "\\fP,", "\\fB")
 	   << text(e.parish())
 	   << ".br" << nl
 	   << text(e.place())

@@ -29,6 +29,7 @@
 #include "key.h"
 #include "thousands.h"
 #include "coordinate.h"
+#include "case.h"
 #include "stdin.h"
 
 namespace {
@@ -101,7 +102,7 @@ namespace {
 	   << ".rt" << nl
 	   << Text<Thousands>(e.id())
 	   << ".br" << nl
-	   << text(e.name())
+	   << text(fix_case(e.name()))
 	   << ".sp" << nl
 	   << "." << nl
 	   << text(e.province(), "\\fP,", "\\fB")

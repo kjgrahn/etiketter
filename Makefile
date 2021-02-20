@@ -15,6 +15,7 @@ libetiketter.a: split.o
 libetiketter.a: key.o
 libetiketter.a: thousands.o
 libetiketter.a: coordinate.o
+libetiketter.a: case.o
 libetiketter.a: stdin.o
 	$(AR) -r $@ $^
 
@@ -33,6 +34,7 @@ checkv: tests
 libtest.a: test/split.o
 libtest.a: test/key.o
 libtest.a: test/thousands.o
+libtest.a: test/case.o
 	$(AR) -r $@ $^
 
 test/%.o: CPPFLAGS+=-I.

@@ -95,37 +95,66 @@ namespace {
     bool etikett(std::ostream& os, const Record& e)
     {
 	using text = Text<std::string>;
+	constexpr char sm[] = R"(\s-4)";
+	constexpr char s0[] = R"(\s0)";
+
+	/* This may be a stupid way of doing layouts in groff. Anyway,
+	 * what I do is, most of the text is paragraphs, with font
+	 * changes and various fixed spacing inbetween.
+	 *
+	 * Then for three pieces of information (id, date, leg): when
+	 * I'm at a well-defined place on the paper I set a mark, jump
+	 * a hardcoded amount, paint the text, and jump back.
+	 *
+	 * This is how date and leg form a footer, and how id shares a
+	 * line with some shorter piece of information. It doesn't
+	 * guarantee, however, that text doesn't run together. To
+	 * guarantee that you have to have a less fixed overall
+	 * layout, and I don't know how to create one of those.
+	 */
 
 	os << ".TITLE" << nl
-	   << ".ps 14" << nl
+	   << ".ps 10" << nl
 	   << ".sp 1.6" << nl
 	   << "." << nl
 	   << ".mk" << nl
-	   << ".ft BI" << nl
-	   << text(e.taxon())
-	   << ".ft" << nl
-	   << ".ps 12" << nl
-	   << text(e.auctor())
-	   << ".sp" << nl
-	   << ".ps 10" << nl
-	   << ".rj 1" << nl
-	   << ".rt" << nl
-	   << Text<Thousands>(e.id())
-	   << ".br" << nl
-	   << text(fix_case(e.name()))
-	   << "." << nl
-	   << ".sp 0.6" << nl
-	   << ".mk" << nl
-	   << ".sp 4c" << nl
+	   << "." << nl;
+
+	os << ".sp 5c" << nl
 	   << text(e.date())
 	   << ".br" << nl
 	   << ".rt" << nl
-	   << ".sp 4c" << nl
+	   << "." << nl;
+
+	os << ".sp 5c" << nl
 	   << ".rj 1" << nl
 	   << text(e.leg(), "\\fP", "Leg \\fI")
 	   << ".rt" << nl
-	   << "." << nl
-	   << text(e.province(), "\\fP,", "\\fB")
+	   << "." << nl;
+
+	os << ".ps 14" << nl
+	   << ".ft BI" << nl
+	   << text(e.taxon())
+	   << ".ft" << nl
+	   << text(e.auctor(), s0, sm)
+	   << ".br" << nl
+	   << ".ps 10" << nl
+	   << text(fix_case(e.name()))
+	   << ".sp" << nl
+	   << ".mk" << nl
+	   << "." << nl;
+
+	if (!e.id().empty()) {
+
+	    os << ".rj 2" << nl
+	       << Text<Thousands>(e.id())
+	       << ".sp -22p" << nl
+	       << text("Artportalen", s0, sm)
+	       << ".rt" << nl
+	       << "." << nl;
+	}
+
+	os << text(e.province(), "\\fP,", "\\fB")
 	   << text(e.parish())
 	   << ".br" << nl
 	   << text(e.place())

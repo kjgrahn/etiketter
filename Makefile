@@ -34,6 +34,7 @@ checkv: tests
 libtest.a: test/split.o
 libtest.a: test/key.o
 libtest.a: test/thousands.o
+libtest.a: test/coordinate.o
 libtest.a: test/case.o
 	$(AR) -r $@ $^
 

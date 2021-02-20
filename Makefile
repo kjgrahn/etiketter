@@ -59,8 +59,8 @@ TAGS:
 .PHONY: clean
 clean:
 	$(RM) etiketter
-	$(RM) *.o lib*.a
-	$(RM) tests
+	$(RM) *.o test/*.o lib*.a
+	$(RM) tests.cc tests
 	$(RM) -r dep
 
 love:

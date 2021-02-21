@@ -14,6 +14,12 @@ namespace {
 	return true;
     }
 
+    bool ends(const std::string& haystack, const std::string& needle)
+    {
+	if (haystack.size() < needle.size()) return false;
+	return haystack.rfind(needle) == haystack.size() - needle.size();
+    }
+
     bool special(const std::string& name)
     {
 	static const std::unordered_set<std::string> names {
@@ -22,10 +28,16 @@ namespace {
 	    "Sankt Pers nycklar",
 	    "Lars-Levis fibbla",
 	    "Wolfs fibbla",
-	    "Ostenfelds ögontröst"
+	    "Ostenfelds ögontröst",
+	    "Birgittamaskros",
 	};
 
 	return names.count(name);
+    }
+
+    bool someones(const std::string& name)
+    {
+	return ends(name, "s björnbär") || ends(name, "s maskros");
     }
 }
 
@@ -33,6 +45,7 @@ std::string fix_case(std::string name)
 {
     if (name.empty()) return name;
     if (special(name)) return name;
+    if (someones(name)) return name;
 
     char& ch = name.front();
 

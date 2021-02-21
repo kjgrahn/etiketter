@@ -36,7 +36,7 @@ namespace {
 
     const char* version()
     {
-	return "1.0";
+	return "1.1";
     }
 
     constexpr char nl = '\n';

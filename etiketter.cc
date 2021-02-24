@@ -255,16 +255,16 @@ int main(int argc, char ** argv)
 	return 1;
     }
 
-    std::unique_ptr<Stdin> stdin;
+    std::unique_ptr<Stdin> fd0;
 
     if (files.size() == 1) {
 	const std::string xls = files[0];
 
-	stdin.reset(new Stdin({"xlsx2csv",
-			       "--sheetname=Test",
-			       "--quoting=all",
-			       "--ignoreempty",
-			       xls}));
+	fd0.reset(new Stdin({"xlsx2csv",
+			     "--sheetname=Test",
+			     "--quoting=all",
+			     "--ignoreempty",
+			     xls}));
     }
 
     if (outfile.empty()) {

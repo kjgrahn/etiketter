@@ -1,0 +1,57 @@
+.hw Art-por-ta-len
+.ss 12 0
+.de BP
+.IP "\fB\\$1\fP"
+..
+.
+.TH ap2csv 1 "SEP 2021 " ap2csv "User Manuals"
+.SH "NAME"
+ap2csv \- convert an Artportalen Excel export to CSV
+.
+.SH "SYNOPSIS"
+.B ap2csv
+.I file.xlsx
+.br
+.B ap2csv --version
+.br
+.B ap2csv --help
+.
+.SH "DESCRIPTION"
+.
+.B ap2csv
+simply converts an Microsoft Excel 2007 (XLSX, OOXML) sheet containing data exported from
+.B Artportalen
+to a CSV form.
+It's not guaranteed to do anything useful to other Excel documents; it assumes
+everything interesting is in columns and rows in the first sheet.
+It's supposed to be equivalent to
+.IP
+.ft I
+xlsx2csv --sheetname=Test --quoting=all --ignoreempty file
+.PP
+except that utility fails unexpectedly depending on the exact version of
+the utility, and the Python version used.
+I got tired of it.
+.PP
+The output is encoded as
+.BR iso8859-1 (1)
+(Latin-1).
+There are double quotes around the cells, and comma between them:
+.IR \[lq]foo\[lq],\[lq]bar\[lq],\[lq]baz\[lq] .
+.
+.SH "AUTHOR"
+J\(:orgen Grahn
+.IR \[fo]grahn+src@snipabacken.se\[fc] .
+.
+.SH "LICENSE"
+The GNU General Public License (GPL) version 2 or (at your option) version 3.
+.
+.SH "SEE ALSO"
+.BR etiketter (5),
+.BR xlsx2csv (1).
+.PP
+.B Artportalen
+.IR \[fo]https://www.artportalen.se/\[fc] .
+.br
+.B xlsx2csv
+.IR \[fo]https://github.com/dilshod/xlsx2csv\[fc] .

@@ -17,7 +17,8 @@ all: test/test
 ap2csv: ap2csv.o libxlsx.a
 	$(CXX) $(CXXFLAGS) -o $@ $< -L. -lxlsx -lxml2
 
-libxlsx.a: foo.o
+libxlsx.a: strings.o
+libxlsx.a: sheet.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # tests
@@ -37,7 +38,7 @@ test/test.cc: test/libtest.a
 test/libtest.a: test/foo.o
 	$(AR) $(ARFLAGS) $@ $^
 
-test/test_%.o: CPPFLAGS+=-I.
+test/%.o: CPPFLAGS+=-I.
 
 # other
 

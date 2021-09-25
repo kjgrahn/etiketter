@@ -4,14 +4,12 @@ NAME
        etiketter - typeset labels for herbarium specimens
 
 SYNOPSIS
-
        etiketter [-o file] file.xlsx
-       etiketter [-o file] < csv
+       etiketter [-o file] < file.xlsx
        etiketter --version
        etiketter --help
 
 DESCRIPTION
-
        etiketter  lets  you  print labels for herbarium specimens,
        based on information extracted from  Artportalen.  It  also
        lets  you  edit  the information first. The result could be
@@ -24,7 +22,7 @@ DESCRIPTION
 
               Västergötland, Mölndal
               brant i vägkant NO om f d Blixås crossbana, Mölndal
-              6395290 1273650 (±10m) RT90 2.5 gon
+              6395290 1273650 (RT90, ±10m)
 
               2 ex kvar i en något högre klippa som inte täcktes
               av lermassorna.
@@ -34,26 +32,24 @@ DESCRIPTION
    Data formats
        Artportalen's feature for data export generates Excel 2007+
        documents, known by the filename extension .xlsx. etiketter
-       can  read  such  a document directly, if Dilshod Temirkhod-
-       jaev's xlsx2csv(1) is installed. If it's not, it  can  read
-       CSV  data,  but this needs to be CSV data on the form where
-       all  cells  are  quoted  and  separated  by   comma,   e.g.
-       "foo","bar","baz" ...
+       can read such documents directly.
+
+              Earlier  versions  relied on an external utility for
+              this, and could also read CSV data. This didn't  al-
+              ways work well, and is no longer supported.
 
        The  output  from  etiketter  is  groff (or roff, or troff)
        source code (or typesetting markup). That is, a  text  file
        mixing  text  to be printed, with formatting commands. When
        typeset by groff(1) to PDF or Postscript, it's a series  of
-       smallish  landscape  mode  pages,  with one label per page.
-       Hopefully a printer can be told to print four or  eight  of
-       these per A4 paper, so you don't waste paper.
+       smallish landscape mode pages, with one label per page.
 
        You may, of course, edit the data in Artportalen, in Excel,
-       in the csv file, or in the output from etiketter. Your  Ex-
-       cel export is likely to include entries for which you don't
-       have a herbarium specimen; you probably want  to  edit  the
-       Excel  sheet  itself to eliminate these. Or perhaps you cut
-       and paste lines to a new sheet.
+       or in the output  from  etiketter.  Your  Excel  export  is
+       likely  to  include  entries  for  which  you  don't have a
+       herbarium specimen; you probably want  to  edit  the  Excel
+       sheet  itself  to  eliminate  these. Or perhaps you cut and
+       paste lines to a new sheet.
 
 AUTHOR
 

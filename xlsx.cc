@@ -4,6 +4,7 @@
 #include "xlsx.h"
 
 #include "sheet.h"
+#include "join.h"
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -73,6 +74,9 @@ namespace {
 /**
  * Extract CSV data from the kind of simple Microsoft Excel 2007
  * documents which are the export format of Artportalen.
+ *
+ * The CSV format is "foo","bar","baz",... there's no attempt to quote
+ * the cell contents.
  */
 void xlsx::csv(std::ostream& os, std::istream& is)
 {
@@ -126,8 +130,7 @@ void xlsx::csv(std::ostream& os, std::istream& is)
     buf.sheet.clear();
 
     for (const auto& row : sheet) {
-	for (const auto& cell : row) {
-	    os << cell << '\n';
-	}
+	util::join_to(os << '"', "\",\"",
+		      row.begin(), row.end()) << "\"\n";
     }
 }

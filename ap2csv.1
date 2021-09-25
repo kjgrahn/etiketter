@@ -38,10 +38,22 @@ The output is encoded as
 (Latin-1).
 There are double quotes around the cells, and comma between them:
 .IR \[lq]foo\[lq],\[lq]bar\[lq],\[lq]baz\[lq] .
+No escaping is applied to cell contents like quotes and commas, since I can't be bothered
+to find out what people typically do there. See Eric Raymond's criticism of CSV.
+.
+.SH "BUGS"
+There is little error handling, and I haven't read the specifications for the XLSX format.
+I just assume that simple Excel exports like that from Artportalen use simple constructs
+and don't vary much.
 .
 .SH "AUTHOR"
 J\(:orgen Grahn
 .IR \[fo]grahn+src@snipabacken.se\[fc] .
+.PP
+The parsing relies on
+.I libxml2
+and the excellent
+.IR libarchive .
 .
 .SH "LICENSE"
 The GNU General Public License (GPL) version 2 or (at your option) version 3.
@@ -55,3 +67,7 @@ The GNU General Public License (GPL) version 2 or (at your option) version 3.
 .br
 .B xlsx2csv
 .IR \[fo]https://github.com/dilshod/xlsx2csv\[fc] .
+.br
+Raymond, Eric S.
+(2004):
+.BR "The Art of Unix Programming" .

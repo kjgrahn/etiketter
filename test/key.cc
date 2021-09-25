@@ -16,21 +16,15 @@ namespace key {
 
     namespace {
 
-	std::string csv(const std::vector<std::string>& ss)
-	{
-	    auto s = join("\",\"", ss);
-	    return '"' + s + '"';
-	}
-
 	void assert_invalid(Key& key, const std::vector<std::string>& ss)
 	{
-	    assert_false(key.feed(csv(ss)));
+	    assert_false(key.feed(ss));
 	    assert_false(key.valid());
 	}
 
 	void assert_valid(Key& key, const std::vector<std::string>& ss)
 	{
-	    assert_true(key.feed(csv(ss)));
+	    assert_true(key.feed(ss));
 	    assert_true(key.valid());
 	}
     }
@@ -62,9 +56,9 @@ namespace key {
 	void simple(TC)
 	{
 	    const Key key = minkey();
-	    const Record e {key, csv(
+	    const Record e {key,
 		    {"Salix", "L.",
-		     "4711", "6869", "Vg", "2021-02-10"})};
+		     "4711", "6869", "Vg", "2021-02-10"}};
 
 	    assert_eq(e.taxon(),  "Salix");
 	    assert_eq(e.auctor(), "L.");
@@ -77,9 +71,9 @@ namespace key {
 	void failure(TC)
 	{
 	    const Key key = minkey();
-	    const Record e {key, csv(
+	    const Record e {key,
 		    {"Salix", "L.",
-		     "4711", "6869", "Vg"})};
+		     "4711", "6869", "Vg"}};
 
 	    assert_eq(e.taxon(),  "Salix");
 

@@ -26,11 +26,11 @@
 
 #include <getopt.h>
 
+#include "xlsx.h"
 #include "key.h"
 #include "thousands.h"
 #include "coordinate.h"
 #include "case.h"
-#include "stdin.h"
 
 namespace {
 
@@ -180,11 +180,13 @@ namespace {
 
     int etiketter(std::ostream& os, std::istream& is)
     {
+	const xlsx::Source source {is};
+	auto it = source.begin();
+	const auto end = source.end();
 	Key key;
 
-	std::string s;
-	while (std::getline(is, s)) {
-	    if (key.feed(s)) break;
+	while (it != end) {
+	    if (key.feed(*it++)) break;
 	}
 
 	if (!key.valid()) {
@@ -197,18 +199,30 @@ namespace {
 
 	unsigned n = 0;
 
-	while (std::getline(is, s)) {
+	while (it != end) {
 
 	    if (n++) {
 		os << "." << nl
 		   << ".bp" << nl;
 	    }
 
-	    const Record record {key, s};
+	    const Record record {key, *it++};
 	    if (!etikett(os, record)) return 1;
 	}
 
 	return 0;
+    }
+
+    std::istream& or_stdin(std::ifstream& is)
+    {
+	if (is.is_open()) return is;
+	return std::cin;
+    }
+
+    std::ostream& or_stdout(std::ofstream& os)
+    {
+	if (os.is_open()) return os;
+	return std::cout;
     }
 }
 
@@ -267,28 +281,26 @@ int main(int argc, char ** argv)
 	return 1;
     }
 
-    std::unique_ptr<Stdin> fd0;
-
+    std::ifstream is;
     if (files.size() == 1) {
-	const std::string xls = files[0];
-
-	fd0.reset(new Stdin({"xlsx2csv",
-			     "--sheetname=Test",
-			     "--quoting=all",
-			     "--ignoreempty",
-			     xls}));
+	const auto filename = files[0];
+	is.open(filename);
+	if (!is) {
+	    std::cerr << "error: cannot open " << filename << " for reading: "
+		      << std::strerror(errno) << '\n';
+	    return 1;
+	}
     }
 
-    if (outfile.empty()) {
-	return etiketter(std::cout, std::cin);
+    std::ofstream os;
+    if (outfile.size()) {
+	os.open(outfile);
+	if (!os) {
+	    std::cerr << "error: cannot open " << outfile << " for writing: "
+		      << std::strerror(errno) << '\n';
+	    return 1;
+	}
     }
 
-    std::ofstream of {outfile};
-    if (!of) {
-	std::cerr << "error: cannot open " << outfile << " for writing: "
-		  << std::strerror(errno) << '\n';
-	return 1;
-    }
-
-    return etiketter(of, std::cin);
+    return etiketter(or_stdout(os), or_stdin(is));
 }

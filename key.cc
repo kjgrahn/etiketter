@@ -3,28 +3,11 @@
  */
 #include "key.h"
 
-#include "split.h"
-
-namespace {
-    const char delim[] = "\",\"";
-
-    using V = std::vector<std::string>;
-
-    V csv(const std::string& s)
-    {
-	if (s.size() < 2) return {};
-	auto a = s.data();
-	auto b = a + s.size();
-
-	return split(delim, a+1, b-1);
-    }
-}
-
-bool Key::feed(const std::string& s)
+bool Key::feed(const Key::V& v)
 {
     map.clear();
     unsigned n = 0;
-    for (const auto& name : csv(s)) {
+    for (const auto& name : v) {
 	map[name] = n++;
     }
     return valid();
@@ -80,7 +63,7 @@ const std::string& Key::get(const V& v, const char* name) const
     return nil;
 }
 
-Record::Record(const Key& key, const std::string& s)
+Record::Record(const Key& key, const Key::V& v)
     : key {key},
-      v {csv(s)}
+      v {v}
 {}

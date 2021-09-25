@@ -19,7 +19,7 @@ etiketter \- typeset labels for herbarium specimens
 .RB [ \-o
 .IR file ]
 <
-.I csv
+.I file.xlsx
 .br
 .B etiketter --version
 .br
@@ -93,12 +93,10 @@ feature for data export generates
 documents, known by the filename extension
 .BR .xlsx .
 .B etiketter
-can read such a document directly, if Dilshod Temirkhodjaev's
-.BR xlsx2csv (1)
-is installed.  If it's not, it can read
-.B CSV
-data, but this needs to be CSV data on the form where all cells are quoted and
-separated by comma, e.g. \fI"foo","bar","baz"\fP ...
+can read such documents directly.
+.IP
+Earlier versions relied on an external utility for this, and could also
+read CSV data.  This didn't always work well, and is no longer supported.
 .
 .PP
 The output from
@@ -120,7 +118,7 @@ or
 it's a series of smallish landscape mode pages, with one label per page.
 .
 .PP
-You may, of course, edit the data in Artportalen, in Excel, in the csv file,
+You may, of course, edit the data in Artportalen, in Excel,
 or in the output from
 .BR etiketter .
 Your Excel export is likely to include
@@ -143,30 +141,14 @@ Print a brief help text and exit.
 .SH "EXAMPLES"
 .
 .IP "% etiketter -o 2021.groff 2021.xlsx"
-From Excel directly to groff input.
-Assumes you have
-.B xlsx2csv (1)
-installed.
+From Excel to groff input.
 .IP "% etiketter 2021.xlsx | groff -Tpdf -P-pA7 -P-l > 2021.pdf"
-Similarly, but all the way to PDF, with A7 pages in landscape mode.
-.IP "% xlsx2csv -q all 2021.xlsx | etiketter -o 2021.groff"
-From csv (provided by
-.BR xlsx2csv (1)
-in the example) to groff input.
-.IP "% xlsx2csv -q all 2021.xlsx | grep -e{Provins,Hieracium} | etiketter -o 2021.groff"
-Having an explicit csv phase allows simple filtering.
-This one generates labels only for
-.IR Hieracium .
-You need to grep for something matching the key row in the sheet too;
-I selected
-.I Provins
-since it's an uncommon word.
-.
-.PP
-The generated groff document describes A7 landscape (105 \[tmu] 74 mm) pages,
-but
+All the way to PDF, with A7 pages in landscape mode.
+This is likely to be what you want, since
+the generated groff document describes A7 landscape (105 \[tmu] 74 mm) pages,
+With no further options,
 .B "groff -Tpfd"
-will by default put these pages in the upper-left corner of standard A4 pages.
+would by default put these pages in the upper-left corner of standard A4 pages.
 .PP
 I have had success by providing the
 .B "-P-pA7 -P-l"
@@ -180,10 +162,11 @@ there's a border on the paper where it will put no ink.
 .SH "BUGS"
 .
 .IP \- 3x
-Character sets.  I haven't tried any of this in an
-.BR utf8 (7)
-locale, only in
+Character sets.  The Excel sheets use
+.BR utf8 (7),
+but I convert to
 .BR latin1 (7).
+Any characters not in the latter will be silently replaced by question marks.
 .
 .IP \-
 The layout breaks down if there's too much text.
@@ -196,13 +179,7 @@ In the meantime, you can edit down overlong descriptions, remove the auctor and 
 For most labels, you don't have to do anything.
 .
 .IP \-
-.BR xlsx2csv 's
-error handling is a bit spotty. For example, if you hand it a file that doesn't
-exist, it doesn't report this but calls it an invalid file, and goes on to
-crash on an error handling bug.
-It's still the most widely available tool I could find, after
-.B xls2txt
-got abandoned. It's been in Debian since 2013.
+The error handling is a bit spotty.
 .
 .SH "NOTES"
 .
@@ -236,10 +213,12 @@ has multiple columns with the same name but different meanings
 so it's useless anyway.
 .
 .IP \-
-It is assumed that the relevant Excel sheet is named
-.BR Test .
-Although that sounds like an accidental name, it would be unwise for
-Artportalen to change it!
+The Excel parsing is simplistic: it assumes a single sheet with a specific layout \-
+although extra columns can be added, or columns can be rearranged.
+I expect
+.B etiketter
+to correctly read straight Artportalen exports, or exports that you have edited lightly.
+Beyond that, all bets are off.
 .
 .IP \-
 It's up to you to ensure that the ink doesn't fade after thirty years or whatever.
@@ -260,11 +239,7 @@ The GNU General Public License (GPL) version 2 or (at your option) version 3.
 .
 .SH "SEE ALSO"
 .BR groblad (5),
-.BR groff (1),
-.BR xlsx2csv (1).
+.BR groff (1).
 .PP
 .B Artportalen
 .IR \[fo]https://www.artportalen.se/\[fc] .
-.br
-.B xlsx2csv
-.IR \[fo]https://github.com/dilshod/xlsx2csv\[fc] .

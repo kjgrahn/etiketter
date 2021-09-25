@@ -71,14 +71,7 @@ namespace {
     }
 }
 
-/**
- * Extract CSV data from the kind of simple Microsoft Excel 2007
- * documents which are the export format of Artportalen.
- *
- * The CSV format is "foo","bar","baz",... there's no attempt to quote
- * the cell contents.
- */
-void xlsx::csv(std::ostream& os, std::istream& is)
+xlsx::Source::Source(std::istream& is)
 {
     archive* a = archive_read_new();
     archive_read_support_format_zip(a);
@@ -125,12 +118,7 @@ void xlsx::csv(std::ostream& os, std::istream& is)
     }
 
     const SharedStrings ss {buf.ss};
-    const Sheet sheet {buf.sheet, ss};
+    sheet = std::make_unique<Sheet>(buf.sheet, ss);
     buf.ss.clear();
     buf.sheet.clear();
-
-    for (const auto& row : sheet) {
-	util::join_to(os << '"', "\",\"",
-		      row.begin(), row.end()) << "\"\n";
-    }
 }

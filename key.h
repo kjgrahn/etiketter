@@ -45,11 +45,12 @@
  */
 class Key {
 public:
-    bool feed(const std::string& s);
     bool valid() const;
 
     using spair = std::array<std::string, 2>;
     using V = std::vector<std::string>;
+
+    bool feed(const V& v);
 
     const std::string& id(const V& v) const;
 
@@ -83,7 +84,7 @@ private:
  */
 class Record {
 public:
-    Record(const Key& key, const std::string& s);
+    Record(const Key& key, const Key::V& v);
 
     using spair = Key::spair;
 

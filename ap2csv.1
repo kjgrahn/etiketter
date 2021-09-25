@@ -12,6 +12,10 @@ ap2csv \- convert an Artportalen Excel export to CSV
 .B ap2csv
 .I file.xlsx
 .br
+.B ap2csv
+<
+.I file
+.br
 .B ap2csv --version
 .br
 .B ap2csv --help
@@ -32,6 +36,9 @@ xlsx2csv --sheetname=Test --quoting=all --ignoreempty file
 except that utility fails unexpectedly depending on the exact version of
 the utility, and the Python version used.
 I got tired of it.
+.PP
+.B ap2csv
+takes a single Excel file as input, or else reads from standard input.
 .PP
 The output is encoded as
 .BR iso8859-1 (1)

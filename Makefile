@@ -15,8 +15,9 @@ all: ap2csv
 all: test/test
 
 ap2csv: ap2csv.o libxlsx.a
-	$(CXX) $(CXXFLAGS) -o $@ $< -L. -lxlsx -lxml2
+	$(CXX) $(CXXFLAGS) -o $@ $< -L. -lxlsx -lxml2 -larchive
 
+libxlsx.a: xlsx.o
 libxlsx.a: strings.o
 libxlsx.a: sheet.o
 libxlsx.a: utf8.o

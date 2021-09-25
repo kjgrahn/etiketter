@@ -43,12 +43,12 @@ std::string Utf8::decode(xml::Node* node)
 
 using xlsx::SharedStrings;
 
-SharedStrings::SharedStrings(const std::string& path)
+SharedStrings::SharedStrings(const std::string& data)
 {
-    xml::Doc* doc = xmlParseFile(path.c_str());
+    xml::Doc* const doc = xml::parse_string(data);
     xmlSetGenericErrorFunc(nullptr, nop);
 
-    xml::xpath::Ctx* ctx = xmlXPathNewContext(doc);
+    xml::xpath::Ctx* const ctx = xmlXPathNewContext(doc);
     xmlXPathRegisterNs(ctx,  cast("ns"),
 		       cast("http://schemas.openxmlformats.org/spreadsheetml/2006/main"));
 

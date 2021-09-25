@@ -51,6 +51,12 @@ namespace xml {
 	    xmlXPathObject* val;
 	};
     }
+
+    inline
+    xml::Doc* parse_string(const std::string& s)
+    {
+	return xmlParseMemory(s.data(), s.size());
+    }
 }
 
 inline

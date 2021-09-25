@@ -13,7 +13,7 @@ namespace xlsx {
 
     class SharedStrings {
     public:
-	explicit SharedStrings(const std::string& path);
+	explicit SharedStrings(const std::string& data);
 
 	const std::string& operator[] (unsigned n) const;
 

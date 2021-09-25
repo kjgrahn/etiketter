@@ -14,7 +14,7 @@ namespace xlsx {
 
     class Sheet {
     public:
-	Sheet(const std::string& path, const SharedStrings& strings);
+	Sheet(const std::string& data, const SharedStrings& strings);
 	auto begin() const { return val.begin(); }
 	auto end() const { return val.end(); }
 

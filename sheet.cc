@@ -42,12 +42,12 @@ namespace {
     }
 }
 
-Sheet::Sheet(const std::string& path,
+Sheet::Sheet(const std::string& data,
 	     const SharedStrings& strings)
 {
-    xml::Doc* doc = xmlParseFile(path.c_str());
+    xml::Doc* const doc = xml::parse_string(data);
 
-    xml::xpath::Ctx* ctx = xmlXPathNewContext(doc);
+    xml::xpath::Ctx* const ctx = xmlXPathNewContext(doc);
     xmlXPathRegisterNs(ctx,  cast("ns"),
 		       cast("http://schemas.openxmlformats.org/spreadsheetml/2006/main"));
 

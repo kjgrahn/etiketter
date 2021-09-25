@@ -92,6 +92,18 @@ namespace {
 	return os << val.a << val.val << val.b << nl;
     }
 
+    /**
+     * Turn "[foo]" to "foo" and leave other strings unchanged.
+     * Exists because Artportalen, for some reason, puts brackets
+     * around names if the record has 'Ospontan' set.
+     */
+    std::string unbracket(const std::string& s)
+    {
+	if (s.size() < 2) return s;
+	if (s.front()!='[' || s.back()!=']') return s;
+	return {s.begin()+1, s.end()-1};
+    }
+
     bool etikett(std::ostream& os, const Record& e)
     {
 	using text = Text<std::string>;
@@ -134,12 +146,12 @@ namespace {
 
 	os << ".ps 14" << nl
 	   << ".ft BI" << nl
-	   << text(e.taxon())
+	   << text(unbracket(e.taxon()))
 	   << ".ft" << nl
-	   << text(e.auctor(), s0, sm)
+	   << text(unbracket(e.auctor()), s0, sm)
 	   << ".br" << nl
 	   << ".ps 10" << nl
-	   << text(fix_case(e.name()))
+	   << text(unbracket(fix_case(e.name())))
 	   << ".sp" << nl
 	   << ".mk" << nl
 	   << "." << nl;

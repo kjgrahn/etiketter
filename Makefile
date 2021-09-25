@@ -20,6 +20,7 @@ ap2csv: ap2csv.o libxlsx.a
 libxlsx.a: strings.o
 libxlsx.a: sheet.o
 libxlsx.a: utf8.o
+libxlsx.a: join.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # tests
@@ -37,6 +38,7 @@ test/test.cc: test/libtest.a
 	orchis -o $@ $^
 
 test/libtest.a: test/utf8.o
+test/libtest.a: test/join.o
 	$(AR) $(ARFLAGS) $@ $^
 
 test/%.o: CPPFLAGS+=-I.

@@ -17,13 +17,22 @@ libetiketter.a: thousands.o
 libetiketter.a: coordinate.o
 libetiketter.a: case.o
 libetiketter.a: stdin.o
-	$(AR) -r $@ $^
+	$(AR) $(ARFLAGS) $@ $^
 
-etiketter: etiketter.o libetiketter.a
-	$(CXX) $(CXXFLAGS) -o $@ $< -L. -letiketter
+libxlsx.a: xlsx.o
+libxlsx.a: strings.o
+libxlsx.a: sheet.o
+libxlsx.a: utf8.o
+libxlsx.a: join.o
+	$(AR) $(ARFLAGS) $@ $^
+
+etiketter: etiketter.o libetiketter.a libxlsx.a
+	$(CXX) $(CXXFLAGS) -o $@ $< -L. -letiketter -lxlsx -lxml2 -larchive
 
 CFLAGS=-W -Wall -pedantic -ansi -g -Os
-CXXFLAGS=-W -Wall -pedantic -std=c++11 -g -Os
+CXXFLAGS=-W -Wall -pedantic -std=c++14 -g -Os
+CPPFLAGS=-I/usr/include/libxml2
+ARFLAGS=rTP
 
 .PHONY: check checkv
 check: tests
@@ -36,12 +45,14 @@ libtest.a: test/key.o
 libtest.a: test/thousands.o
 libtest.a: test/coordinate.o
 libtest.a: test/case.o
-	$(AR) -r $@ $^
+libtest.a: test/utf8.o
+libtest.a: test/join.o
+	$(AR) $(ARFLAGS) $@ $^
 
 test/%.o: CPPFLAGS+=-I.
 
-tests: tests.o libtest.a libetiketter.a
-	$(CXX) $(CXXFLAGS) -o $@ tests.o -L. -ltest -letiketter
+tests: tests.o libtest.a libetiketter.a libxlsx.a
+	$(CXX) $(CXXFLAGS) -o $@ tests.o -L. -ltest -letiketter -lxlsx
 
 tests.cc: libtest.a
 	orchis -o $@ $^

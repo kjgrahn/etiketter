@@ -5,17 +5,21 @@
 .IP "\fB\\$1\fP"
 ..
 .
-.TH etiketter 1 "FEB 2021 " Etiketter "User Manuals"
+.TH etiketter 1 "SEP 2021 " Etiketter "User Manuals"
 .SH "NAME"
 etiketter \- typeset labels for herbarium specimens
 .
 .SH "SYNOPSIS"
 .B etiketter
+.RB [ \-u
+.IR user ]
 .RB [ \-o
 .IR file ]
 .I file.xlsx
 .br
 .B etiketter
+.RB [ \-u
+.IR user ]
 .RB [ \-o
 .IR file ]
 <
@@ -84,6 +88,9 @@ The numerical record ID for this observation. It's the one used to form URLs, e.
 Observation can cover many days, but only the first date is printed.
 .BP "Observatörer"
 Assumed to be a single observer (you).
+If this field is empty, and you haven't specified a name using the
+.B \-u
+option, the observation is skipped.
 .
 .SS "Data formats"
 .
@@ -132,6 +139,10 @@ a new sheet.
 Print the result (the troff text) to
 .I file
 instead of standard output.
+.
+.BP "\-u \fIuser"
+Override the observer name.  Useful if there are multiple observers for some
+records, but you were the one who took a specimen.
 .
 .BP --version
 Print version information and exit.

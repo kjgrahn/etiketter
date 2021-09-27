@@ -104,11 +104,14 @@ namespace {
 	return {s.begin()+1, s.end()-1};
     }
 
-    bool etikett(std::ostream& os, const Record& e)
+    bool etikett(std::ostream& os, std::string user, const Record& e)
     {
 	using text = Text<std::string>;
 	constexpr char sm[] = R"(\s-4)";
 	constexpr char s0[] = R"(\s0)";
+
+	if (user.empty()) user = e.leg();
+	if (user.empty()) return true;
 
 	/* This may be a stupid way of doing layouts in groff. Anyway,
 	 * what I do is, most of the text is paragraphs, with font
@@ -140,7 +143,7 @@ namespace {
 
 	os << ".sp 5c" << nl
 	   << ".rj 1" << nl
-	   << text(e.leg(), "\\fP", "Leg \\fI")
+	   << text(user, "\\fP", "Leg \\fI")
 	   << ".rt" << nl
 	   << "." << nl;
 
@@ -178,7 +181,8 @@ namespace {
 	return true;
     }
 
-    int etiketter(std::ostream& os, std::istream& is)
+    int etiketter(std::ostream& os, std::istream& is,
+		  const std::string& user)
     {
 	const xlsx::Source source {is};
 	auto it = source.begin();
@@ -207,7 +211,7 @@ namespace {
 	    }
 
 	    const Record record {key, *it++};
-	    if (!etikett(os, record)) return 1;
+	    if (!etikett(os, user, record)) return 1;
 	}
 
 	return 0;
@@ -230,12 +234,12 @@ int main(int argc, char ** argv)
 {
     const std::string prog = argv[0] ? argv[0] : "etiketter";
     const std::string usage = std::string("usage: ")
-	+ prog + " [-o file] [file]\n"
+	+ prog + " [-u user] [-o file] [file]\n"
 	"       "
 	+ prog + " --help\n"
 	"       "
 	+ prog + " --version";
-    const char optstring[] = "o:";
+    const char optstring[] = "u:o:";
     const struct option long_options[] = {
 	{"help", 0, 0, 'H'},
 	{"version", 0, 0, 'V'},
@@ -245,6 +249,7 @@ int main(int argc, char ** argv)
     std::cin.sync_with_stdio(false);
     std::cout.sync_with_stdio(false);
 
+    std::string user;
     std::string outfile;
 
     int ch;
@@ -252,6 +257,9 @@ int main(int argc, char ** argv)
 			     optstring,
 			     &long_options[0], 0)) != -1) {
 	switch(ch) {
+	case 'u':
+	    user = optarg;
+	    break;
 	case 'o':
 	    outfile = optarg;
 	    break;
@@ -302,5 +310,6 @@ int main(int argc, char ** argv)
 	}
     }
 
-    return etiketter(or_stdout(os), or_stdin(is));
+    return etiketter(or_stdout(os), or_stdin(is),
+		     user);
 }

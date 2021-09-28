@@ -3,6 +3,7 @@
  */
 #include "sheet.h"
 #include "xml.h"
+#include "utf8.h"
 
 #include <string>
 #include <stdexcept>
@@ -40,11 +41,38 @@ namespace {
 	}
 	return content(val);
     }
+
+    /**
+     * Decoding UTF-8 to Latin-1 in XML content. Characters which do
+     * not fit (emojis, fancy quotes, foreign alphabets, ...) are
+     * replaced with a '?'.  Undefined result on broken UTF-8.
+     */
+    class Utf8 {
+    public:
+	std::string decode(const std::string& s);
+
+    private:
+	std::vector<unsigned> v;
+    };
+}
+
+std::string Utf8::decode(const std::string& s)
+{
+    const unsigned char* p = reinterpret_cast<const unsigned char*>(s.data());
+    const auto q = p + s.size();
+    v.clear();
+    auto it = std::back_inserter(v);
+    utf8::decode(p, q, it);
+    for (auto& ch : v) {
+	if (ch>0xff) ch = '?';
+    }
+    return {v.begin(), v.end()};
 }
 
 Sheet::Sheet(const std::string& data,
 	     const SharedStrings& strings)
 {
+    Utf8 utf8;
     xml::Doc* const doc = xml::parse_string(data);
 
     xml::xpath::Ctx* const ctx = xmlXPathNewContext(doc);
@@ -57,7 +85,7 @@ Sheet::Sheet(const std::string& data,
 	auto& valr = val.back();
 
 	for (xml::Node* cell : xml::xpath::Obj{ctx, row, "ns:c"}) {
-	    valr.push_back(celltext(cell, strings));
+	    valr.push_back(utf8.decode(celltext(cell, strings)));
 	}
     }
     xmlXPathFreeContext(ctx);

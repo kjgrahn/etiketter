@@ -23,6 +23,11 @@ namespace {
      * <c>                   numerical content in decimal
      *   <v>91418341</v>     notation
      * </c>
+     * <c t="inlineStr">     string content without silly indirection
+     *   <is>                but with lots of bloat
+     *     <t>Provins</t>
+     *   </is>
+     * </c>
      *
      */
     std::string celltext(xml::Node* const cell,
@@ -30,7 +35,8 @@ namespace {
     {
 	xml::Node* val = xmlFirstElementChild(cell);
 	if (!val) return "-";
-	if (attribute(cell, "t") == "s") {
+	const auto t = attribute(cell, "t");
+	if (t == "s") {
 	    try {
 		unsigned n = std::stoul(content(val));
 		return strings[n];
@@ -38,6 +44,9 @@ namespace {
 	    catch (const std::logic_error&) {
 		return "-";
 	    }
+	}
+	else if (t == "inlineStr") {
+	    val = xmlFirstElementChild(val);
 	}
 	return content(val);
     }

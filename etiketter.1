@@ -215,10 +215,16 @@ so it's useless anyway.
 .IP \-
 The Excel parsing is simplistic: it assumes a single sheet with a specific layout \-
 although extra columns can be added, or columns can be rearranged.
-I expect
+I've seen
 .B etiketter
-to correctly read straight Artportalen exports, or exports that you have edited lightly.
-Beyond that, all bets are off.
+correctly handle .xlsx files written by
+Artportalen,
+.BR gnumeric (1)
+and
+Microsoft Excel 2016,
+but this is no guarantee that it handles
+.I all
+\&.xlsx files.
 .
 .IP \-
 It's up to you to ensure that the ink doesn't fade after thirty years or whatever.

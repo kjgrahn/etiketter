@@ -15,7 +15,8 @@ namespace {
 
     /**
      * The text contents of a <c>. Such a cell is, in the Excel export
-     * from Artportalen I'm looking at, on either of these forms:
+     * from Artportalen I'm looking at, and/or in xlsx files roundtripped
+     * through Excel itself or Gnumeric, on either of these forms:
      *
      * <c t="s">             string content; the string is
      *   <v>38</v>           in SharedStrings
@@ -28,13 +29,14 @@ namespace {
      *     <t>Provins</t>
      *   </is>
      * </c>
+     * <c/>                  empty cell
      *
      */
     std::string celltext(xml::Node* const cell,
 			 const SharedStrings& strings)
     {
 	xml::Node* val = xmlFirstElementChild(cell);
-	if (!val) return "-";
+	if (!val) return "";
 	const auto t = attribute(cell, "t");
 	if (t == "s") {
 	    try {

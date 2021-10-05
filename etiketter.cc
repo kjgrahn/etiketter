@@ -111,7 +111,6 @@ namespace {
 	constexpr char s0[] = R"(\s0)";
 
 	if (user.empty()) user = e.leg();
-	if (user.empty()) return true;
 
 	/* This may be a stupid way of doing layouts in groff. Anyway,
 	 * what I do is, most of the text is paragraphs, with font
@@ -181,6 +180,16 @@ namespace {
 	return true;
     }
 
+    /**
+     * True if there's no point making a label out of this record.
+     */
+    bool useless(const Record& e, std::string user)
+    {
+	if (user.empty()) user = e.leg();
+	if (user.empty()) return true;
+	return e.name().empty() || e.taxon().empty();
+    }
+
     int etiketter(std::ostream& os, std::istream& is,
 		  const std::string& user)
     {
@@ -205,12 +214,14 @@ namespace {
 
 	while (it != end) {
 
+	    const Record record {key, *it++};
+	    if (useless(record, user)) continue;
+
 	    if (n++) {
 		os << "." << nl
 		   << ".bp" << nl;
 	    }
 
-	    const Record record {key, *it++};
 	    if (!etikett(os, user, record)) return 1;
 	}
 
